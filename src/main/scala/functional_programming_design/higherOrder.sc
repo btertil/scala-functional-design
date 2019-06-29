@@ -89,9 +89,7 @@ addF(x => x*x, 1, 5)
 
 def addFC(f: (Int, Int) => Int)(a: Int, b: Int) = f(a, b)
 addFC((x, y) => x*y)(1, 5)
-// z lambda expr
-//def addF2(f: (Int, Int) => Int) = 5
-//addFC(addF2)(1, 5)
+
 
 // Funkcja zwraca funkcję
 def retFun: (Int, Int) => Int = {
@@ -104,12 +102,6 @@ val returned_f = retFun
 returned_f
 returned_f(10, 5)
 
-// funkcja addF2 bierze funkcje (Int, Int) => Int i zwraca funkcje
-
-//def addF2(f: (Int, Int) => Int) = f
-//def addF2(f: (Int, Int) => Int) = f
-//def helpF(a: Int, b: Int) = a*b
-//addF2((x,y) => x*y)(1, 5)
 
 
 
@@ -124,3 +116,24 @@ dzialanie((x, y) => x+y)(3, 18)
 dzialanie((x, y) => x*y)(15, 18)
 dzialanie((x, y) => x*y)(1, 18)
 dzialanie((x, y) => x*y)(3, 18)
+
+
+def sqrtF(a: Double, tol: Double = 1e-18): Double = {
+
+  def abs(v: Double): Double = if (v < 0) -v else v
+  def isGoodEnough(v: Double): Boolean = if (abs(v * v - a) / a < tol) true else false
+  def improve(v: Double): Double = (v + a / v) / 2
+
+  def sqrtIter(v: Double): Double = if (isGoodEnough(v)) v else sqrtIter(improve(v))
+
+  sqrtIter(1.0)
+
+}
+
+sqrtF(4)
+sqrtF(44)
+
+// Tuple w Scala
+val tup = (2, 3)
+tup._1
+tup._2
