@@ -118,6 +118,25 @@ dzialanie((x, y) => x*y)(1, 18)
 dzialanie((x, y) => x*y)(3, 18)
 
 
+// Z przykładu Martina Oderskyego
+
+def sumFMO(f: Int => Int) (a: Int, b: Int): Int = if (a > b) 0 else f(a) + sumFMO(f)(a+1, b)
+sumFMO(x => x*x)(1, 100) // Nie jest tail recursive!
+
+
+// Oraz moja wersja Tail Recursive do funkcji Martina Oderskyego
+def sumFMOTR(f: Int => Int) (a: Int, b: Int): Int = {
+  @tailrec
+  def innerF(acc: Int, step: Int): Int = {
+    if (step > b) acc else innerF(acc + f(step), step + 1)
+  }
+  innerF(0, a)
+}
+
+sumFMOTR(x => x)(1, 500000)
+
+
+
 def sqrtF(a: Double, tol: Double = 1e-18): Double = {
 
   def abs(v: Double): Double = if (v < 0) -v else v
