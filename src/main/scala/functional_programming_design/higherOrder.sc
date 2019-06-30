@@ -211,12 +211,12 @@ pairs.foreach {p => p._2 match {
 
 def abs(x: Double): Double = if (x > 0) x else -x
 
-def fixedPoint(f: Double => Double, tol: Double = 1e-10)(firstGuess: Double = 1): Double = {
+def fixedPoint(f: Double => Double, tol: Double = 1e-12)(firstGuess: Double = 1): Double = {
 
   @tailrec
   def iterate(guess: Double): Double = {
     val nextval = f(guess)
-    if ((abs(nextval - guess) / guess) / guess < tol) nextval else iterate((guess+nextval)/2)
+    if ((abs(nextval - guess) / guess) / guess < tol) nextval else iterate(nextval)
   }
 
   iterate(firstGuess)
@@ -224,3 +224,7 @@ def fixedPoint(f: Double => Double, tol: Double = 1e-10)(firstGuess: Double = 1)
 }
 
 fixedPoint(x => 1 + x/2)(1)
+
+// Martin Odersky sqrt as a fixedPoint
+def sqrtMO(x: Double): Double = fixedPoint(y => (y + x/y)/2)(1)
+sqrtMO(4)
