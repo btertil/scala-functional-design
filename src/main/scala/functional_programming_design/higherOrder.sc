@@ -204,3 +204,23 @@ pairs.foreach {p => p._2 match {
   case "Kkk" => println(s" ${p._2} to P8, id ${p._1}")
   case _ => Nil
 }}
+
+
+
+// fixed point of a function:  => f(x) = x, czyli przecięcie z przekątną na wykresie
+
+def abs(x: Double): Double = if (x > 0) x else -x
+
+def fixedPoint(f: Double => Double, tol: Double = 1e-10)(firstGuess: Double = 1): Double = {
+
+  @tailrec
+  def iterate(guess: Double): Double = {
+    val nextval = f(guess)
+    if ((abs(nextval - guess) / guess) / guess < tol) nextval else iterate((guess+nextval)/2)
+  }
+
+  iterate(firstGuess)
+
+}
+
+fixedPoint(x => 1 + x/2)(1)
