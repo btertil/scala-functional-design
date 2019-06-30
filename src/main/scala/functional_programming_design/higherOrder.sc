@@ -137,3 +137,51 @@ sqrtF(44)
 val tup = (2, 3)
 tup._1
 tup._2
+
+
+// curring jeszcze raz
+def infunc(a: Int, b: Int): Int = a * b
+def outfunc(f: (Int, Int) => Int)(a: Int, b: Int): Int = f(a, b) - 2 * (a + b)
+
+outfunc((x, y) => x*y)(5, 6)
+outfunc((x, y) => x*y+x*y)(5, 6)
+
+outfunc(infunc)(2, 24)
+
+
+def sumf2(f: Double => Double, lBound: Double, hBound: Double): Double = {
+  if (lBound > hBound) 0 else f(lBound) + sumf2(f, lBound + 1, hBound)
+}
+
+sumf2(x => x, 1, 5)
+sumf2(x => x, 1, 15)
+
+sumf2(x => 1/x, 1, 5)
+sumf2(x => 1/x, 1, 15)
+
+// Tailrec version
+def sumf2TR(f: Double => Double, lBound: Double, hBound: Double): Double = {
+  @tailrec
+  def sumf2TRIter(acc: Double, step: Double): Double = {
+    if (step > hBound) acc else sumf2TRIter(acc + f(step), step + 1)
+  }
+  sumf2TRIter(0, lBound)
+}
+
+sumf2TR(x => x, 1, 5)
+sumf2TR(x => x, 1, 15)
+
+sumf2TR(x => 1/x, 1, 5)
+sumf2TR(x => 1/x, 1, 15)
+
+
+// pattern matching
+
+val pairs: List[(Int, String)] = List((1, "Aaa"), (2, "Eee"), (3, "Kkk"), (4, "Mmm"))
+
+pairs.foreach {p => p._2 match {
+  case "Aaa" => println(s" ${p._2} to P24, id ${p._1}")
+  case "Eee" => println(s" ${p._2} to P8, id ${p._1}")
+  case "Kkk" => println(s" ${p._2} to P8, id ${p._1}")
+  case _ => Nil
+}}
