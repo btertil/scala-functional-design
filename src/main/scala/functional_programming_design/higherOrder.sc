@@ -225,6 +225,7 @@ def fixedPoint(f: Double => Double, tol: Double = 1e-12)(firstGuess: Double = 1)
 
 fixedPoint(x => 1 + x/2)(1)
 
-// Martin Odersky sqrt as a fixedPoint
+// Martin Odersky sqrt as a fixedPoint - przyklad curringu z osobnymi listami atgumentów
+// fixPoint przyjmuje funkcję!
 def sqrtMO(x: Double): Double = fixedPoint(y => (y + x/y)/2)(1)
 sqrtMO(4)
