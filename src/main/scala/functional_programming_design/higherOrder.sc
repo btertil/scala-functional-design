@@ -87,6 +87,7 @@ def addF(f: Int => Int, a: Int, b: Int) = f(a) + f(b)
 // z lambda expr
 addF(x => x*x, 1, 5)
 
+// curried version
 def addFC(f: (Int, Int) => Int)(a: Int, b: Int) = f(a, b)
 addFC((x, y) => x*y)(1, 5)
 
@@ -229,3 +230,13 @@ fixedPoint(x => 1 + x/2)(1)
 // fixPoint przyjmuje funkcję!
 def sqrtMO(x: Double): Double = fixedPoint(y => (y + x/y)/2)(1)
 sqrtMO(4)
+
+
+// Map
+val mp = Map((1, "jeden"), (2, "dwa"))
+mp
+
+val mm = Map(1 -> "raz", 2 -> "dwa")
+mm
+
+for (m <- mm) println(m._2)
