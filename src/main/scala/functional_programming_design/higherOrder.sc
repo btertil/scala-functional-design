@@ -251,7 +251,40 @@ sqrtMO_avgDump(4)
 
 
 
+// Classes: przykład ułamki i działania na ułamkach
+class Rational (x: Int, y: Int) {
+  val numer = x
+  val denom = y
 
+  private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+  lazy val gcd_val = gcd(x, y)
+
+  def reduced = new Rational(x/gcd_val, y/gcd_val)
+
+  def add(that: Rational): Rational = new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
+  def sub(that: Rational): Rational = new Rational(numer * that.denom - that.numer * denom, denom * that.denom)
+
+  def mul(that: Rational): Rational = new Rational(numer * that.numer , denom * that.denom)
+  def div(that: Rational): Rational = new Rational(numer * that.denom , denom * that.numer)
+
+  def eq(that: Rational): Boolean = if (this.numer * this.denom == that.numer * that.denom) true else false
+
+  override def toString: String = x/gcd_val + " / " + y/gcd_val
+
+}
+
+val r1 = new Rational(1,2)
+
+r1.numer
+r1.denom
+
+val r2 = new Rational(6,6)
+
+val result = r1.add(r2)
+result.numer
+result.denom
+
+result.toString
 
 // Map
 val mp = Map((1, "jeden"), (2, "dwa"))
