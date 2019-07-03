@@ -225,11 +225,32 @@ def fixedPoint(f: Double => Double, tol: Double = 1e-12)(firstGuess: Double = 1)
 }
 
 fixedPoint(x => 1 + x/2)(1)
+fixedPoint(x => 4 + x/8)(1)
 
 // Martin Odersky sqrt as a fixedPoint - przyklad curringu z osobnymi listami atgumentów
 // fixPoint przyjmuje funkcję!
 def sqrtMO(x: Double): Double = fixedPoint(y => (y + x/y)/2)(1)
 sqrtMO(4)
+
+// Ale oscylacje mozna wyeliminować bardziej elegancko prze funkcję avgDump
+def avgDump(f: Double => Double)(x: Double): Double = (x + f(x)) / 2
+
+// dla lepszego zrozumienia
+avgDump(x => x*x - x)(5)
+
+// teraz tak jak Martin Odersky pokazuje: funlcja avgDump zwraca inną funkcję
+// ale my wprowadzamy do sqrtMO_avgDump tak jak chcemy bez modyfikacji na oscylację!
+def sqrtMO_avgDump(x: Double): Double = fixedPoint(avgDump(y => x/y))(1)
+sqrtMO_avgDump(4)
+
+// call by name (waliduje gdy potrzeba)
+// call by name parmeter: a: => Int
+// np:
+//
+// def func(a: Int, b: => Int) ... // a call by value, b call by name
+
+
+
 
 
 // Map
@@ -240,3 +261,8 @@ val mm = Map(1 -> "raz", 2 -> "dwa")
 mm
 
 for (m <- mm) println(m._2)
+
+
+// konwencje w scala
+(1 to 5) flatMap (x => (1 to 5) map (y => (x, y)))
+(1 to 5).flatMap(x => (1 to 5).map(y => (x, y)))
