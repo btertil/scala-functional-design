@@ -253,23 +253,40 @@ sqrtMO_avgDump(4)
 
 // Classes: przykład ułamki i działania na ułamkach
 class Rational (x: Int, y: Int) {
-  val numer = x
-  val denom = y
 
-  private def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
-  lazy val gcd_val = gcd(x, y)
+  require(y != 0, "Denominator cannot be zero!")
+
+  def this(x: Int) = this(x, 1)
+
+  def gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+  val gcd_val = gcd(x, y)
+
+  val denom = if (y > 0) y / gcd_val else -y / gcd_val
+  val numer = if (y > 0) x / gcd_val else -x / gcd_val
+
 
   def reduced = new Rational(x/gcd_val, y/gcd_val)
 
+  def neg: Rational = new Rational(-numer, denom)
+
   def add(that: Rational): Rational = new Rational(numer * that.denom + that.numer * denom, denom * that.denom)
-  def sub(that: Rational): Rational = new Rational(numer * that.denom - that.numer * denom, denom * that.denom)
+  def sub(that: Rational): Rational = add(that.neg)
 
   def mul(that: Rational): Rational = new Rational(numer * that.numer , denom * that.denom)
   def div(that: Rational): Rational = new Rational(numer * that.denom , denom * that.numer)
 
-  def eq(that: Rational): Boolean = if (this.numer * this.denom == that.numer * that.denom) true else false
+  def eq(that: Rational): Boolean = if (numer / denom == that.numer / that.denom) true else false
 
-  override def toString: String = x/gcd_val + " / " + y/gcd_val
+  def less(that: Rational): Boolean = numer * that.denom < that.numer * denom
+  def max(that: Rational): Rational = if(this.less(that)) that else this
+
+
+  override def toString: String = numer + "/" + denom
+
+  // operators and names are the same since r1.add(r2) == r1 add r2
+  // def + = add
+  def + = add _
+  def - :Rational => Rational = sub
 
 }
 
@@ -285,12 +302,21 @@ result.numer
 result.denom
 
 result.toString
+r1.sub(new Rational(4, 5))
+
+new Rational(2,3).neg
+new Rational(5)
+
+r1 + r2
+r1 - r2
+
+
 
 // Map
-val mp = Map((1, "jeden"), (2, "dwa"))
+val mp = Map((1, "jeden"), (2, "dwa"), (3, 3))
 mp
 
-val mm = Map(1 -> "raz", 2 -> "dwa")
+val mm = Map(1 -> "raz", 2 -> "dwa", 3 -> 3)
 mm
 
 for (m <- mm) println(m._2)
