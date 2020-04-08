@@ -144,6 +144,7 @@ def sqrtF(a: Double, tol: Double = 1e-18): Double = {
   def isGoodEnough(v: Double): Boolean = if (abs(v * v - a) / a < tol) true else false
   def improve(v: Double): Double = (v + a / v) / 2
 
+  @tailrec
   def sqrtIter(v: Double): Double = if (isGoodEnough(v)) v else sqrtIter(improve(v))
 
   sqrtIter(1.0)
