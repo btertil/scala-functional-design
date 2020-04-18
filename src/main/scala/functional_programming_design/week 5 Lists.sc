@@ -1,8 +1,3 @@
-import com.sun.org.apache.xalan.internal.xsltc.compiler.util.IntType
-import jdk.nashorn.internal.runtime.regexp.joni.constants.StringType
-
-import scala.annotation.tailrec
-
 val a = List(1, 2, 3)
 val b = List(4, 5 ,6)
 
@@ -121,6 +116,7 @@ msort(friuts)((x, y) => x < y)
 
 
 // Parametrized implicit
+import scala.annotation.tailrec
 import scala.math.Ordering
 
 def msort_implicit[T](xs: List[T])(implicit ord: Ordering[T]): List[T] = {
@@ -143,3 +139,88 @@ def msort_implicit[T](xs: List[T])(implicit ord: Ordering[T]): List[T] = {
 
 msort_implicit(nums)
 msort_implicit(friuts)
+
+
+// Higher order functions
+
+def funcFirstLAst[T](l: List[T])(f: (T, T) => T): T = f(l.head, l.last)
+
+funcFirstLAst(nums)((x, y) => x + y)
+funcFirstLAst(friuts)((x, y) => x + y)
+funcFirstLAst(friuts)((x, _) => x)
+
+def funcEachElement[T](l: List[T])(f: T => T): List[T] =  {
+    l.map(f)
+}
+
+funcEachElement(nums)(_ + 4)
+funcEachElement(nums)(- _)
+nums.map(- _)
+
+
+friuts.foldLeft("pierwsze_")((x, y) => x + "_" + y)
+
+funcEachElement(friuts)(_ + "cc")
+friuts.map(_ + "cc")
+
+def funcAggregate[T](l: List[T])(f: (T, T) => T): T =  {
+
+    l.reduce(f)
+}
+
+funcAggregate(nums)(_ + _)
+funcAggregate(nums)(_ - _)
+funcAggregate(nums)(_ * _)
+
+funcAggregate(friuts)(_ + _)
+
+
+// lekcja 5: List reduction
+
+
+@tailrec
+def myMap[T](l: List[T], acc: List[T]=List())(f: T => T): List[T] = l match {
+    case Nil => acc ++ l
+    case xs :: xy => myMap(xy, acc ++ List(f(xs)))(f)
+}
+
+
+myMap(nums)(_ * 10)
+myMap(friuts)("big_" + _)
+
+myMap(List(1, 2, 3) ++ List(4, 5, 6))(_ * 5)
+
+
+// przykłąd jak rationals
+
+class MyList[T](d: List[T]) {
+
+    @tailrec
+    private def myMap(l: List[T], acc: List[T]=List())(f: T => T): List[T] = l match {
+        case Nil => acc ++ l
+        case xs :: xy => myMap(xy, acc ++ List(f(xs)))(f)
+    }
+
+    def map(f: T => T): MyList[T] = new MyList(myMap(d)(f))
+
+    @tailrec
+    private def myReduce(l: List[Int], acc: Int = 0)(f: (Int, Int) => Int): Int = l match {
+        case Nil => acc
+        case xs :: xy => myReduce(xy, f(acc, xs))(f)
+    }
+
+    // TODO: parametryzację typów dodać
+    // TODO: acumulator potrzebuje inny unit dla mnożenia (1) i do dodawania (0)
+    def reduce(f: (Int, Int) => Int): Int = myReduce(List(1, 2, 3, 4))(f)
+
+    override def toString = d.toString
+
+}
+
+val myListNums = new MyList(nums)
+val myListFruits = new MyList(friuts)
+
+myListNums.map(_ * 2)
+myListFruits.map(x => x + "_to")
+
+myListNums.reduce(_ * _)
