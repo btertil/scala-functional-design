@@ -203,10 +203,17 @@ class MyList[T](d: List[T]) {
 
     def map(f: T => T): MyList[T] = new MyList(myMap(d)(f))
 
+    var reduceFirstFlag = 1
+
     @tailrec
     private def myReduce(l: List[Int], acc: Int = 0)(f: (Int, Int) => Int): Int = l match {
         case Nil => acc
-        case xs :: xy => myReduce(xy, f(acc, xs))(f)
+        case xs :: xy =>
+            if (reduceFirstFlag == 1) {
+                reduceFirstFlag = 0
+                myReduce(xy, xs)(f)
+            } else myReduce(xy, f(acc, xs))(f)
+
     }
 
     // TODO: parametryzację typów dodać
@@ -223,4 +230,4 @@ val myListFruits = new MyList(friuts)
 myListNums.map(_ * 2)
 myListFruits.map(x => x + "_to")
 
-myListNums.reduce(_ * _)
+myListNums.reduce(_ + _)
