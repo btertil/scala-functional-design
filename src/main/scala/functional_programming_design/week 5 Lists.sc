@@ -222,6 +222,12 @@ class MyList[T](d: List[T]) {
         myReduce(for (i <- d) yield i.toString.toInt)(f)
     }
 
+
+    def isEmpty: Boolean = d match {
+        case Nil => true
+        case _ => false
+    }
+
     override def toString = d.toString
 
 }
@@ -240,3 +246,53 @@ myListNums.reduce(_ + _)
 
 nums.sum
 nums.product
+
+assert(myListNums.reduce(_ + _) == nums.sum)
+assert(myListNums.reduce(_ * _) == nums.product)
+
+
+// Dla poćwiczenia jeszcze raz same mappery w nowej klasie Cos
+
+class Cos[T](l: List[T]) {
+
+    @tailrec
+    private def myMap(li: List[T], acc: List[T] = List())(op: T => T): Cos[T] = li match {
+        case Nil => new Cos(acc)
+        case x :: xs => myMap(xs, acc ++ List(op(x)))(op)
+    }
+
+    def map(op: T => T): Cos[T] = myMap(l)(op)
+
+
+    def isEmpty: Boolean = l match {
+        case Nil => true
+        case _ => false
+    }
+
+    @tailrec
+    private def myFilter(li: List[T], acc: List[T] = List())(p: T => Boolean): Cos[T] = li match {
+        case Nil => new Cos(acc)
+        case x :: xs =>
+            if (p(x)) myFilter(xs, acc ++ List(x))(p) else myFilter(xs, acc)(p)
+
+    }
+
+    def filter(p: T => Boolean): Cos[T] = myFilter(l)(p)
+
+    override def toString = l.toString()
+
+
+
+}
+
+val emptyCos = new Cos(List())
+emptyCos.isEmpty
+
+val nonEmptyCos = new Cos(List(-5, 0, 1, 2,3))
+nonEmptyCos.isEmpty
+
+nonEmptyCos.map(_ + 5)
+nonEmptyCos.map(_ * 5)
+
+nonEmptyCos.filter(_ > 0)
+nonEmptyCos.filter(_ < 2)
