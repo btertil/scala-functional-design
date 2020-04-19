@@ -279,6 +279,26 @@ class Cos[T](l: List[T]) {
 
     def filter(p: T => Boolean): Cos[T] = myFilter(l)(p)
 
+
+    @tailrec
+    private def myFilterNot(li: List[T], acc: List[T] = List())(p: T => Boolean): Cos[T] = li match {
+        case Nil => new Cos(acc)
+        case x :: xs =>
+            if (!p(x)) myFilterNot(xs, acc ++ List(x))(p) else myFilterNot(xs, acc)(p)
+
+    }
+
+    def filterNot(p: T => Boolean): Cos[T] = myFilterNot(l)(p)
+
+
+    @tailrec
+    private def myTo(li: List[T], acc: List[T]): Cos[T] = li match {
+        case Nil => new Cos(acc)
+        case x :: xs => myTo(xs, acc ++ List(x))
+    }
+
+    def to: Cos[T] = myTo(l, acc=List())
+
     override def toString = l.toString()
 
 
@@ -296,3 +316,30 @@ nonEmptyCos.map(_ * 5)
 
 nonEmptyCos.filter(_ > 0)
 nonEmptyCos.filter(_ < 2)
+
+nonEmptyCos.filterNot(_ < 2)
+
+nonEmptyCos.to
+
+
+// Dodatkowe funkcje pack i encode przy użyciu wbudowanej metody span
+// span zwraca najdłuższy prefix spełniający warunek w 1 liscie (u mnie przypisane do "first") i resztę w 2 liście "rest")
+
+
+val dopack = List("a", "a", "a", "b", "b", "c", "a")
+
+@tailrec
+def pack[T](l: List[T], acc: List[List[T]] = List()): List[List[T]] = l match {
+    case Nil => acc
+    case x :: _ =>
+        val (first, rest) = l.span(_ == x )
+        pack(rest, acc ++ List(first))
+}
+
+pack(dopack)
+
+
+def encode[T](l: List[T]): List[(T, Int)] = pack(l).map(x => (x.head, x.length))
+encode(dopack)
+
+
