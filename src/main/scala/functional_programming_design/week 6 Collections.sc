@@ -10,5 +10,31 @@
 
 val s = "Hello World!"
 
-s.map(List(".>" , _))
-s.flatMap(".>" + _)
+// czy jakieś są z wielkiej litery a czy wszystkie są z wielkiej litery?
+s.exists(_.isUpper)
+s.forall(_.isUpper)
+
+// Przykłąd map i flatmap
+
+// Specjalnie List żeby było kilk list w sekwencji
+s.map(List(".>", _))
+
+// ale flatmap zrobi contatenacjeę tych list
+s.flatMap(List(".>",  _))
+
+
+val a = Vector(1, 2, 3, 4)
+val b = Vector("a", "b", "c", "d")
+
+val pairs = a.zip(b)
+
+pairs.unzip
+
+// Range: operator "to" inclusive, "until" exclusive !!!
+1 to 10
+1 until 10
+
+// generator <- też jest inclusive ale generuje vector a nie Range
+for (i <- a) println(i)
+val to =  for (i <- a) yield i
+
