@@ -217,8 +217,10 @@ class MyList[T](d: List[T]) {
     }
 
     // TODO: parametryzację typów dodać
-    // TODO: acumulator potrzebuje inny unit dla mnożenia (1) i do dodawania (0)
-    def reduce(f: (Int, Int) => Int): Int = myReduce(List(1, 2, 3, 4))(f)
+    def reduce(f: (Int, Int) => Int): Int = {
+        reduceFirstFlag = 1
+        myReduce(for (i <- d) yield i.toString.toInt)(f)
+    }
 
     override def toString = d.toString
 
@@ -230,4 +232,11 @@ val myListFruits = new MyList(friuts)
 myListNums.map(_ * 2)
 myListFruits.map(x => x + "_to")
 
+myListNums.reduce(_ * _)
 myListNums.reduce(_ + _)
+myListNums.reduce(_ * _)
+myListNums.reduce(_ + _)
+
+
+nums.sum
+nums.product
