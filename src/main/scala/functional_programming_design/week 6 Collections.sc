@@ -94,3 +94,68 @@ for (i <- 1 until n; j <- 1 until i if isPrime(i+j)) yield (i, j)
 
 // scalar product z for expr
 (for ((x, y) <- a.zip(a.map(_ * 5))) yield x * y).sum
+
+
+// N-Queens example
+// Jak ustawićna szachownicy tyle hetmanów, jaka jest szerokość
+// szachownicy aby żaden nie szachował innego (row, column, diagonal)
+
+/*
+One way to solve the problem would be to place a queen in each row.
+So we start with the first row, place a queen there,
+then place a queen in the second row, and so on.
+Once we've placed a number of queens, we must check for the next queen
+in the column that it does not threaten any of the other queens, so that it sits
+in its own column and it doesn't threaten the other queens by following a diagonal.
+That's lead to an algorithm for solving the problem.
+The algorithm is recursive.
+It says suppose that we've already generated all the solutions consisting of
+placing k-1 queens on a board of size n.
+
+*/
+
+
+def queens(n: Int): Set[List[Int]] = {
+
+    def isSafe(col: Int, queens: List[Int]): Boolean = {
+
+        val row = queens.length
+
+        // teraz zmieniamy postać queens aby była informacja
+        // nie tylko o kolumnie ale i o wierzu
+        // będzie potrzebne dla diagonala później
+        // uwaga, queens ma na początku ostatnio dodanego hetmana
+        // więc range musi być odwrotnie!
+
+        val queensWithRow = (row - 1 to 0 by -1 ).zip(queens)
+        queensWithRow.forall{
+            case (r, c) => col != c && math.abs(col - c) != row - r
+        }
+
+    }
+
+
+    def placeQueens(k: Int): Set[List[Int]] =
+
+        if (k == 0) Set(List())
+        else
+            for {
+                queens <- placeQueens(k - 1)
+                col <- 0 until n
+                if isSafe(col, queens)
+            } yield col :: queens
+
+    placeQueens(n)
+
+
+}
+
+queens(4)
+
+def show(queens: List[Int]): Unit = {
+    val lines: List[String] = for (col <- queens.reverse) yield Vector.fill(queens.length)(" * ").updated(col, " X ").mkString
+    println("\n" + lines.mkString("\n\n"))
+}
+
+
+queens(4).foreach(show)
