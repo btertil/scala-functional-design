@@ -128,7 +128,7 @@ def queens(n: Int): Set[List[Int]] = {
         // więc range musi być odwrotnie!
 
         val queensWithRow = (row - 1 to 0 by -1 ).zip(queens)
-        queensWithRow.forall{
+        queensWithRow.forall {
             case (r, c) => col != c && math.abs(col - c) != row - r
         }
 
@@ -158,4 +158,4 @@ def show(queens: List[Int]): Unit = {
 }
 
 
-queens(4).foreach(show)
+queens(4).take(1).foreach(show)
